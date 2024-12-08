@@ -1,3 +1,5 @@
+import os
+
 def can_sort_scarecrow(n, k, arr):
     """
     Определяет, можно ли отсортировать массив с помощью "сортировки пугалом".
@@ -29,7 +31,10 @@ def can_sort_scarecrow(n, k, arr):
 
 
 if __name__ == "__main__":
-    with open('../txtf/input.txt', "r") as file:
+    input_file = os.path.abspath('lab3/task3/txtf/input.txt')
+    output_file = os.path.abspath('lab3/task3/txtf/output.txt')
+
+    with open(input_file, "r") as file:
         n, k = map(int, file.readline().strip().split())
         arr = list(map(int, file.readline().strip().split()))
 
@@ -38,5 +43,5 @@ if __name__ == "__main__":
     else:
         result = 'No'
 
-    with open('../txtf/output.txt', "w") as file:
+    with open(output_file, "w") as file:
         file.write(result)

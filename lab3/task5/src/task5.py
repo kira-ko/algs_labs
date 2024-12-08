@@ -1,3 +1,5 @@
+import os
+
 def calculate_h_index(citations):
     # Сортируем массив в порядке убывания
     citations.sort(reverse=True)
@@ -12,10 +14,13 @@ def calculate_h_index(citations):
 
 
 if __name__ == "__main__":
-    with open("../txtf/input.txt", "r") as file:
+    input_file = os.path.abspath('lab3/task5/txtf/input.txt')
+    output_file = os.path.abspath('lab3/task5/txtf/output.txt')
+
+    with open(input_file, "r") as file:
         citations = list(map(int, file.readline().strip().replace(',', ' ').split()))
 
     result = calculate_h_index(citations)
 
-    with open("../txtf/output.txt", "w") as file:
+    with open(output_file, "w") as file:
         file.write(str(result))

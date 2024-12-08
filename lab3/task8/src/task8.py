@@ -1,5 +1,6 @@
 import heapq
 import math
+import os
 
 
 def k_closest_points_to_origin(n, K, points):
@@ -23,12 +24,14 @@ def k_closest_points_to_origin(n, K, points):
 
 
 if __name__ == "__main__":
+    input_file = os.path.abspath('lab3/task1/txtf/input.txt')
+    output_file = os.path.abspath('lab3/task1/txtf/output.txt')
 
-    with open('../txtf/input.txt', 'r') as file:
+    with open(input_file, 'r') as file:
         n, K = map(int, file.readline().split())
         points = [tuple(map(int, file.readline().split())) for _ in range(n)]
 
     result = k_closest_points_to_origin(n, K, points)
 
-    with open('../txtf/output.txt', 'w') as file:
+    with open(output_file, 'w') as file:
         file.write(str(result) + '\n')

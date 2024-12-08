@@ -1,3 +1,5 @@
+import os
+
 def count_segments_containing_points(s, p, segments, points):
     events = []
     # Добавляем события начала и конца отрезков
@@ -30,7 +32,10 @@ def count_segments_containing_points(s, p, segments, points):
 
 
 if __name__ == "__main__":
-    with open("../txtf/input.txt", "r") as file:
+    input_file = os.path.abspath('lab3/task4/txtf/input.txt')
+    output_file = os.path.abspath('lab3/task4/txtf/output.txt')
+
+    with open(input_file, "r") as file:
         s, p = map(int, file.readline().strip().split())
         segments = [tuple(map(int, file.readline().strip().split())) for _ in range(s)]
         points = list(map(int, file.readline().strip().split()))
@@ -38,5 +43,5 @@ if __name__ == "__main__":
     result = count_segments_containing_points(s, p, segments, points)
 
 
-    with open("../txtf/output.txt", "w") as file:
+    with open(output_file, "w") as file:
         file.write(" ".join(map(str, result)))

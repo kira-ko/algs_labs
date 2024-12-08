@@ -1,3 +1,4 @@
+import os.path
 import random
 
 def partition(arr, low, high):
@@ -20,3 +21,17 @@ def randomized_quick_sort(arr, low, high):
         randomized_quick_sort(arr, low, pi - 1)
         randomized_quick_sort(arr, pi + 1, high)
     return arr
+
+if __name__ == "__main__":
+    input_file = os.path.abspath('lab3/task1/txtf/input.txt')
+    output_file = os.path.abspath('lab3/task1/txtf/output.txt')
+
+
+    with open(input_file, 'r') as f:
+        n = int(f.readline().strip())
+        arr = list(map(int, f.readline().strip().split()))
+
+    result = randomized_quick_sort(arr, 0, n - 1)
+
+    with open(output_file, 'w') as f:
+        f.write(' '.join(map(str, result)))
