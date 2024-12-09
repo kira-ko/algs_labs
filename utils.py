@@ -1,94 +1,113 @@
 import os
-import subprocess
-from pathlib import Path
+import time
+import importlib.util
+from time import perf_counter
 
-def run_task(src_path, txt_path):
-    """Запускает задачу, используя src файл и txt файлы (input.txt и output.txt)."""
-    input_file = os.path.join(txt_path, "input.txt")
-    output_file = os.path.join(txt_path, "output.txt")
+# Определяем корневую директорию (где находится utils.py)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-    if not os.path.isfile(input_file):
-        print(f"[WARN] input.txt не найден в {txt_path}, пропуск задачи")
-        return
 
+def get_lab_path(lab_name):
+    """
+    Возвращает абсолютный путь к указанной лабораторной.
+    """
+    lab_path = os.path.join(BASE_DIR, lab_name)
+    if not os.path.exists(lab_path):
+        raise FileNotFoundError(f"Лаборатория '{lab_name}' не найдена в '{BASE_DIR}'")
+    return lab_path
+
+
+def measure_time(func, *args, repeats=1):
+    """
+    Измеряет среднее время выполнения функции func с переданными аргументами.
+    """
+    start_time = perf_counter()
+    for _ in range(repeats):
+        result = func(*args)
+    elapsed_time = (perf_counter() - start_time) / repeats
+    return result, elapsed_time
+
+
+def run_task(task_path):
+    """
+        Запускает конкретную задачу из указанного пути.
+        """
     try:
-        with open(input_file, 'r') as inp, open(output_file, 'w') as outp:
-            subprocess.run(["python", src_path], stdin=inp, stdout=outp, check=True)
-            print(f"[INFO] Задача {src_path} успешно выполнена.")
-    except subprocess.CalledProcessError as e:
-        print(f"[ERROR] Ошибка выполнения задачи {src_path}: {e}")
-
-def run_tests(tests_path):
-    """Запускает тесты задачи"""
-    test_files = list(Path(tests_path).glob("test*.py"))
-    if not test_files:
-        print(f"[WARN] Тесты не найдены в {tests_path}, пропуск тестов")
-        return
-
-    for test_file in test_files:
-        try:
-            print(f"[INFO] Запуск тестов {test_file}")
-            subprocess.run(["python", test_file], check=True)
-        except subprocess.CalledProcessError as e:
-            print(f"[ERROR] Ошибка выполнения тестов {test_file}: {e}")
-
-def run_lab_tasks(lab_path):
-    """Запускает все задачи лабораторной"""
-    for task_folder in sorted(os.listdir(lab_path)):
-        task_path = os.path.join(lab_path, task_folder)
-        if not os.path.isdir(task_path):
-            continue
-
         src_path = os.path.join(task_path, "src")
         tests_path = os.path.join(task_path, "tests")
-        txt_path = os.path.join(task_path, "txtf")
+        input_file = os.path.join(task_path, "txtf", "input.txt")
+        output_file = os.path.join(task_path, "txtf", "output.txt")
 
-        # Запуск задачи
-        for file in os.listdir(src_path):
-            if file.endswith(".py"):
-                run_task(os.path.join(src_path, file), txt_path)
+        main_file = os.path.join(src_path, "main.py")
+        if not os.path.exists(main_file):
+            raise FileNotFoundError(f"Файл main.py не найден в папке '{src_path}'")
 
-        # Запуск тестов
-        run_tests(tests_path)
+        # Динамический импорт main.py
+        spec = importlib.util.spec_from_file_location("main", main_file)
+        main_module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(main_module)
 
-def run_all_labs(root_path):
-    """Запускает все лабораторные работы"""
-    for lab_folder in sorted(os.listdir(root_path)):
-        lab_path = os.path.join(root_path, lab_folder)
-        if os.path.isdir(lab_path) and lab_folder.startswith("lab"):
-            print(f"[INFO] Запуск задач лабораторной {lab_folder}")
-            run_lab_tasks(lab_path)
+        # Проверяем наличие функции main
+        if not hasattr(main_module, "main"):
+            raise AttributeError(f"В файле main.py отсутствует функция 'main'")
 
-def main():
-    print("Выберите действие:")
-    print("1. Запустить все лабораторные работы.")
-    print("2. Запустить задачи конкретной лабораторной.")
-    print("3. Запустить тесты конкретной задачи.")
-    choice = input("Введите номер действия: ").strip()
+        print(f"  Запуск задачи: {os.path.basename(task_path)}")
+        os.chdir(src_path)  # Переключаемся в директорию задачи
 
-    root_path = input("Введите путь к корневой папке лабораторных: ").strip()
+        # Читаем входные данные
+        with open(input_file, "r") as f:
+            input_data = f.read()
 
-    if choice == "1":
-        run_all_labs(root_path)
-    elif choice == "2":
-        lab_name = input("Введите имя лабораторной (например, lab1): ").strip()
-        lab_path = os.path.join(root_path, lab_name)
-        if os.path.isdir(lab_path):
-            run_lab_tasks(lab_path)
-        else:
-            print(f"[ERROR] Лабораторная {lab_name} не найдена.")
-    elif choice == "3":
-        lab_name = input("Введите имя лабораторной (например, lab1): ").strip()
-        task_name = input("Введите имя задачи (например, task1): ").strip()
-        task_path = os.path.join(root_path, lab_name, task_name)
-        if os.path.isdir(task_path):
-            tests_path = os.path.join(task_path, "tests")
-            run_tests(tests_path)
-        else:
-            print(f"[ERROR] Задача {task_name} не найдена в {lab_name}.")
-    else:
-        print("[ERROR] Некорректный ввод.")
+        # Измеряем время выполнения main
+        def wrapper():
+            with open(output_file, "w") as out_f:
+                main_module.main(input_data, out_f)
+
+        _, exec_time = measure_time(wrapper, repeats=1)
+
+        print(f"    Время выполнения: {exec_time:.5f} сек")
+        os.chdir(BASE_DIR)  # Возвращаемся в корневую директорию
+    except Exception as e:
+        print(f"Ошибка при выполнении задачи: {e}")
+
+
+def run_lab(lab_name):
+    """
+    Запускает все задачи из указанной лабораторной.
+    """
+    try:
+        lab_path = get_lab_path(lab_name)
+        print(f"Запуск лабораторной: {lab_name}")
+        tasks = [d for d in os.listdir(lab_path) if os.path.isdir(os.path.join(lab_path, d))]
+        for task in sorted(tasks):
+            task_path = os.path.join(lab_path, task)
+            run_task(task_path)
+    except FileNotFoundError as e:
+        print(e)
+
+
+def run_all_labs():
+    """
+    Запускает все лабораторные.
+    """
+    print("Запуск всех лабораторных...")
+    labs = [d for d in os.listdir(BASE_DIR) if d.startswith("lab") and os.path.isdir(os.path.join(BASE_DIR, d))]
+    for lab in sorted(labs):
+        run_lab(lab)
+
 
 if __name__ == "__main__":
-    main()
+    import argparse
 
+    parser = argparse.ArgumentParser(description="Утилита для запуска лабораторных работ")
+    parser.add_argument("--lab", type=str, help="Укажите лабораторную для запуска (например, lab5)")
+    parser.add_argument("--all", action="store_true", help="Запустить все лабораторные")
+
+    args = parser.parse_args()
+
+    if args.all:
+        run_all_labs()
+    elif args.lab:
+        run_lab(args.lab)
+    else:
+        print("Укажите аргумент --lab <имя лаборатории> или --all для запуска всех лабораторных.")

@@ -22,10 +22,11 @@ def randomized_quick_sort(arr, low, high):
         randomized_quick_sort(arr, pi + 1, high)
     return arr
 
-if __name__ == "__main__":
-    input_file = os.path.abspath('../txtf/input.txt')
-    output_file = os.path.abspath('../txtf/output.txt')
+def main():
+    current_dir = os.path.dirname(os.path.abspath(__file__))
 
+    input_file = os.path.join(current_dir, '../txtf/input.txt')
+    output_file = os.path.join(current_dir, '../txtf/output.txt')
 
     with open(input_file, 'r') as f:
         n = int(f.readline().strip())
@@ -35,3 +36,7 @@ if __name__ == "__main__":
 
     with open(output_file, 'w') as f:
         f.write(' '.join(map(str, result)))
+
+
+if __name__ == "__main__":
+    main()
