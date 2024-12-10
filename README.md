@@ -11,11 +11,11 @@
 
 лабораторная работа №2: 
 
-лабораторная работа №3: [lab3](https://github.com/kira-ko/algs_labs.lab/tree/main/lab3)
+лабораторная работа №3: [lab3](https://github.com/kira-ko/algs_labs/tree/main/lab3)
 
-лабораторная работа №4: [lab4](https://github.com/kira-ko/algs_labs.lab/tree/main/lab4)
+лабораторная работа №4: [lab4](https://github.com/kira-ko/algs_labs/tree/main/lab4)
 
-лабораторная работа №5: [lab5](https://github.com/kira-ko/algs_labs.lab/tree/main/lab5)
+лабораторная работа №5: [lab5](https://github.com/kira-ko/algs_labs/tree/main/lab5)
 
 лабораторная работа №6: 
 
