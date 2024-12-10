@@ -7,11 +7,11 @@
 ### Навигация
 
 - [ ] [Задача 1 - Стек ](https://github.com/kira-ko/algs_labs/tree/main/lab4/task1)
-- [ ] [Задача 3 - Скобочная последовательность. Версия 1 ](https://github.com/kira-ko/algs_labs/tree/main/lab3/task3)
-- [ ] [Задача 5 - Стек с максимумом ](https://github.com/kira-ko/algs_labs/tree/main/lab3/task5)
-- [ ] [Задача 6 - Очередь с минимумом ](https://github.com/kira-ko/algs_labs/tree/main/lab3/task6)
-- [ ] [Задача 8 - Постфиксная запись ](https://github.com/kira-ko/algs_labs/tree/main/lab3/task8)
-- [ ] [Задача 9 - Поликлиника ](https://github.com/kira-ko/algs_labs/tree/main/lab3/task9)
+- [ ] [Задача 3 - Скобочная последовательность. Версия 1 ](https://github.com/kira-ko/algs_labs/tree/main/lab4/task3)
+- [ ] [Задача 5 - Стек с максимумом ](https://github.com/kira-ko/algs_labs/tree/main/lab4/task5)
+- [ ] [Задача 6 - Очередь с минимумом ](https://github.com/kira-ko/algs_labs/tree/main/lab4/task6)
+- [ ] [Задача 8 - Постфиксная запись ](https://github.com/kira-ko/algs_labs/tree/main/lab4/task8)
+- [ ] [Задача 9 - Поликлиника ](https://github.com/kira-ko/algs_labs/tree/main/lab4/task9)
 
 
 ## Описание
